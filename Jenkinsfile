@@ -46,16 +46,17 @@ pipeline {
 
         stage ('Upload to Nexus') {
             steps {
+                echo "Uploading to Nexus.."
                 nexusArtifactUploader artifacts: [[artifactId: 'EcommerceApp', classifier: '', file: '/var/lib/jenkins/workspace/ecommerce-app-pipeline/EcommerceApp/target/EcommerceApp.war', type: 'war']], credentialsId: 'nexus-id', groupId: 'com', nexusUrl: '16.171.135.9:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'ecommerce-app', version: '0.0.1-SNAPSHOT'
             }
         }
 
         stage ('Deploy to Tomcat') {
             steps {
+                echo "Deploying to Tomcat.."
                 dir('EcommerceApp') {
                     deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://16.170.173.216:8080/')], contextPath: null, war: 'target/*.war'
                 }
-                
             }
         }
     }
