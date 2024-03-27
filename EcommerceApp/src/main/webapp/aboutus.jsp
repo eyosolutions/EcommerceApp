@@ -38,7 +38,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 	</div>
 	<br>
 	<center>
-	<p>Online Ecommerce Project, consectetur adipisicing<br> 
+	<p>Online Ecommerce Project, Chris Parbey<br> 
 	elit, sed do eiusmod tempor incididunt ut labore <br>
 	et dolore magna aliqua. Ut enim ad minim veniam, <br>
 	quis nostrud exercitation ullamco laboris nisi ut <br>
