@@ -74,9 +74,9 @@
     <artifactId>javax.servlet-api</artifactId>
     <version>3.0.1</version>
     <scope>provided</scope>
-</dependency>
-
-    <distributionManagement>
+    </dependency>
+  </dependencies>
+  <distributionManagement>
     <repository>
       <id>ecommerce-release</id>
       <name>ecommerce-release</name>
@@ -88,8 +88,6 @@
       <url>http://13.60.41.101:8081/repository/ecommerce-snapshot/</url>
     </snapshotRepository>
 </distributionManagement>
-    
-  </dependencies>
   <build>
     <finalName>EcommerceApp</finalName>
   </build>
