@@ -4,6 +4,10 @@ pipeline {
     tools {
         maven "3.9.6"
     } 
+
+    environment {
+                ScannerHome = tool 'sonar-scanner'
+    }
     
     stages {
         stage ('Git clone') {
@@ -26,18 +30,14 @@ pipeline {
         }
 
         stage ('SonarQube Analysis') {
-            environment {
-                ScannerHome = tool 'SonarQube 5.0'
-            }
-
             steps {
                 echo "Analyzing with SonarQube.."
                 script {
                     dir ('EcommerceApp') {
-                        def compiledClassesDir = sh(script: 'mvn help:evaluate -Dexpression=project.build.outputDirectory -q -DforceStdout', returnStdout: true).trim()
+                        compiledClassesDir = sh(script: 'mvn help:evaluate -Dexpression=project.build.outputDirectory -q -DforceStdout', returnStdout: true).trim()
 
-                        withSonarQubeEnv('SonarQube') {
-                            sh "${ScannerHome}/bin/sonar-scanner -Dsonar.projectKey=ecommerceapp -Dsonar.java.binaries=${compiledClassesDir}"
+                        withSonarQubeEnv(credentialsId: 'sonar-token') {
+                            sh "${ScannerHome}/bin/sonar-scanner -Dsonar.projectKey=ecommercefrontend -Dsonar.java.binaries=${compiledClassesDir}"
                         }
                     }
                 }
@@ -47,7 +47,9 @@ pipeline {
         stage ('Upload to Nexus') {
             steps {
                 echo "Uploading to Nexus.."
-                nexusArtifactUploader artifacts: [[artifactId: 'EcommerceApp', classifier: '', file: '/var/lib/jenkins/workspace/ecommerce-app-pipeline/EcommerceApp/target/EcommerceApp.war', type: 'war']], credentialsId: 'nexus-id', groupId: 'com', nexusUrl: '16.171.135.9:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'ecommerce-app', version: '0.0.1-SNAPSHOT'
+                withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+                    sh "mvn deploy -DskipTests=true"
+                }
             }
         }
 
@@ -55,7 +57,7 @@ pipeline {
             steps {
                 echo "Deploying to Tomcat.."
                 dir('EcommerceApp') {
-                    deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://16.170.173.216:8080/')], contextPath: null, war: 'target/*.war'
+                    deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://16.171.39.72:8080/')], contextPath: null, war: 'target/*.war'
                 }
             }
         }
