@@ -46,10 +46,12 @@ pipeline {
 
         stage ('Upload to Nexus') {
             steps {
-                echo "Uploading to Nexus.."
-                withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+                dir('EcommerceApp') {
+                    echo "Uploading to Nexus.."
+                    withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
                     sh "mvn deploy -DskipTests=true"
-                }
+                    }
+                } 
             }
         }
 
