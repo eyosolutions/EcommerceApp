@@ -59,7 +59,7 @@ pipeline {
             steps {
                 echo "Deploying to Tomcat.."
                 dir('EcommerceApp') {
-                    deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://16.171.39.72:8080/')], contextPath: null, war: 'target/*.war'
+                    deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://16.171.20.235:8080/')], contextPath: null, war: 'target/*.war'
                 }
             }
         }
