@@ -79,12 +79,12 @@
     <repository>
       <id>ecommerce-release</id>
       <name>ecommerce-release</name>
-      <url>http://13.48.56.140:8081/repository/ecommerce-release/</url>
+      <url>http://13.48.249.169:8081/repository/ecommerce-release/</url>
     </repository>
     <snapshotRepository>
       <id>ecommerce-snapshot</id>
       <name>ecommerce-snapshot</name>
-      <url>http://13.48.56.140:8081/repository/ecommerce-snapshot/</url>
+      <url>http://13.48.249.169:8081/repository/ecommerce-snapshot/</url>
     </snapshotRepository>
 </distributionManagement>
   <build>
