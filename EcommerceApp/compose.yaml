@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - prom-network
+      - app-network
 
   mysql:
     image: mysql:8.3.0
@@ -19,7 +19,7 @@ services:
     volumes:
       - ./sql:/docker-entrypoint-initdb.d 
     networks:
-      - prom-network
+      - app-network
   exporter:
     image: prom/mysqld-exporter:main
     container_name: exporter
@@ -30,7 +30,7 @@ services:
     ports:
       - "9104:9104"
     networks:
-      - prom-network
+      - app-network
   
   phpmyadmin:
     image: phpmyadmin:latest
@@ -43,7 +43,7 @@ services:
     ports:
       - 8081:80
     networks:
-      - prom-network 
+      - app-network 
 
   prometheus:
     image: prom/prometheus
@@ -54,7 +54,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - prom-network
+      - app-network
 
   grafana:
     image: grafana/grafana-enterprise
@@ -63,8 +63,8 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - prom-network
+      - app-network
 
 networks:
-  prom-network:
+  app-network:
     driver: bridge
