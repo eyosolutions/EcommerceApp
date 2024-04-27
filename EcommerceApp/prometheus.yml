@@ -36,3 +36,7 @@ scrape_configs:
       - target_label: __address__
           # The mysqld_exporter host:port
         replacement: exporter:9104
+
+  - job_name: 'tomcat'
+    static_configs:
+      - targets: ['web-server:8088']

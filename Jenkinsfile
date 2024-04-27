@@ -4,16 +4,11 @@ pipeline {
     tools {
         maven "maven3"
     } 
-
-    environment {
-                ScannerHome = tool 'sonar-scanner'
-    }
     
     stages {
-        stage ('Git clone') {
+        stage('Git clone') {
             steps {
-                sh 'echo "Git cloning.."'
-                git branch: 'master', url: 'https://github.com/Chriscloudaz/EcommerceApp.git'
+                git 'https://github.com/Chriscloudaz/EcommerceApp.git'
             }
         }
 
@@ -29,37 +24,25 @@ pipeline {
             }
         }
 
-        stage ('SonarQube Analysis') {
-            steps {
-                echo "Analyzing with SonarQube.."
-                script {
-                    dir ('EcommerceApp') {
-                        compiledClassesDir = sh(script: 'mvn help:evaluate -Dexpression=project.build.outputDirectory -q -DforceStdout', returnStdout: true).trim()
+        // stage('SonarCloud analysis') {
+        //     steps {
+        //         dir ('EcommerceApp') {
+        //             withSonarQubeEnv(credentialsId: 'sonar-cloud-token', installationName: 'SonarCloud') {
+        //                 sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar -Dsonar.organization=parbtechsolutions -Dsonar.java.binaries=."
+        //             }    
+        //         }
+        //     }
+        // }
 
-                        withSonarQubeEnv(credentialsId: 'sonar-token') {
-                            sh "${ScannerHome}/bin/sonar-scanner -Dsonar.projectKey=ecommercefrontend -Dsonar.java.binaries=${compiledClassesDir}"
+        stage('Build & Push to Docker Registry') {
+            steps {
+                dir ('EcommerceApp') {
+                    script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh "docker build -t chriscloudaz/ecommerceapp:latest ."
+                        sh "docker push chriscloudaz/ecommerceapp:latest"
                         }
                     }
-                }
-            }
-        }
-
-        stage ('Upload to Nexus') {
-            steps {
-                dir('EcommerceApp') {
-                    echo "Uploading to Nexus.."
-                    withMaven(globalMavenSettingsConfig: 'global-maven', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
-                    sh "mvn deploy -DskipTests=true"
-                    }
-                } 
-            }
-        }
-
-        stage ('Deploy to Tomcat') {
-            steps {
-                echo "Deploying to Tomcat.."
-                dir('EcommerceApp') {
-                    deploy adapters: [tomcat9(credentialsId: 'tomcat-server', path: '', url: 'http://13.60.32.221:8080/')], contextPath: null, war: 'target/*.war'
                 }
             }
         }

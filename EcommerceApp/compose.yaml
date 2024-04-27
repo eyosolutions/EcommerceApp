@@ -1,9 +1,10 @@
 services:
   tomcat:
-    image: chriscloudaz/ecommerceapp:latest 
+    image: chriscloudaz/ecommerceapp-monitoring:latest 
     container_name: web-server
     ports:
       - "8080:8080"
+      - "8088:8088"
     networks:
       - app-network
 
@@ -20,6 +21,7 @@ services:
       - ./sql:/docker-entrypoint-initdb.d 
     networks:
       - app-network
+      
   exporter:
     image: prom/mysqld-exporter:main
     container_name: exporter
