@@ -15,8 +15,8 @@ public class DBConnect
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		//	conn = DriverManager.getConnection("jdbc:sqlite:mydatabase.db");
 		//	conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/Swapnil/eclipse-workspace/Online Electronic Shopping/mydatabase.db");
-		//	conn = DriverManager.getConnection("jdbc:mysql://db:3306/ecommerce_app","root","root");
-			conn = DriverManager.getConnection("jdbc:mysql://mysql-service.ecommerce-app-db.svc.cluster.local:3306/ecommerce_app","root","root");
+			conn = DriverManager.getConnection("jdbc:mysql://ecommerce-db:3306/ecommerce_app","root","root");
+//			conn = DriverManager.getConnection("jdbc:mysql://mysql-service.ecommerce-app-db.svc.cluster.local:3306/ecommerce_app","root","root");
 
 			
 		}catch (Exception e) {
