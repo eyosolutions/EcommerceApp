@@ -1,0 +1,72 @@
+services:
+  tomcat:
+    image: chriscloudaz/ecommerceapp-monitoring:latest 
+    container_name: web-server
+    ports:
+      - "8080:8080"
+      - "8088:8088"
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.3.0
+    env_file:
+      - .env
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_DATABASE: ecommerce_app
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d 
+    networks:
+      - app-network
+      
+  exporter:
+    image: prom/mysqld-exporter:main
+    container_name: exporter
+    restart: always
+    command: "--config.my-cnf=/cfg/config.my-cnf"
+    volumes:
+      - ./config.my-cnf:/cfg/config.my-cnf
+    ports:
+      - "9104:9104"
+    networks:
+      - app-network
+  
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pma
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PPMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - app-network 
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
