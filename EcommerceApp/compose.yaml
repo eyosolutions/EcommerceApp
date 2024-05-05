@@ -1,7 +1,7 @@
 services:
   tomcat:
     image: eyodevops/ecommerce-docker:1.1
-    container_name: eccommerce-app
+    container_name: ecommerce-app
     ports:
       - "8080:8080"
       - "8088:8088"
